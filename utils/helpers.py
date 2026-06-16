@@ -1,13 +1,11 @@
-# ============================================================
 # utils/helpers.py
-# ------------------------------------------------------------
 # Shared helper functions and constants used across the project.
 # Imported by both app.py and recommendation_engine.py.
 #
 # Keeping shared logic here avoids duplication and ensures
 # thresholds are defined in exactly one place.
-# Lab Guide [9]: Use meaningful variable/function names.
-# Lab Guide [9]: Keep functions short and reusable.
+# Use meaningful variable/function names.
+# Keep functions short and reusable.
 #
 # Contents:
 #   1. Constants       -- score and time thresholds
@@ -16,20 +14,15 @@
 #   4. Decoding        -- recommendation label to display string
 #   5. Validation      -- input checking before AI runs
 #   6. Color mapping   -- UI color per recommendation type
-# ============================================================
 
-
-# ============================================================
 # 1. CONSTANTS
-# ------------------------------------------------------------
 # Thresholds used by the Rule-Based Engine in run_rules().
 # Defined here (not inside the function) so they can be
 # imported by both recommendation_engine.py and app.py.
-# Lab Guide [9]: Avoid hardcoded values inside functions.
-# ============================================================
+# Avoid hardcoded values inside functions.
 
 # Score thresholds -- determine which primary rule fires
-LOW_SCORE_THRESHOLD  = 40    # score < 40  --> Review Basics
+LOW_SCORE_THRESHOLD  = 40    # score < 40  --> Review Basics 
 HIGH_SCORE_THRESHOLD = 70    # score >= 70 --> Next Topic
                               # 40 <= score < 70 --> Practice More
 
@@ -40,17 +33,13 @@ HIGH_TIME_THRESHOLD  = 80    # seconds; triggers Modifier A in run_rules()
 # Currently used in generate_explanation() via run_rules() logic
 LOW_CONFIDENCE_PENALTY = True
 
-
-# ============================================================
 # 2. TOPIC LIST
-# ------------------------------------------------------------
 # Single source of truth for all valid quiz topics.
 # Used in:
 #   - app.py            : dropdown options in Tab 1
 #   - generate_dataset  : topic column values
 #   - get_next_topic()  : cycling to the next topic
 # To add a new topic, add it to this list only.
-# ============================================================
 
 def get_topic_list():
     """
@@ -108,13 +97,10 @@ def get_next_topic(current_topic):
     return "OOP"
 
 
-# ============================================================
 # 3. ENCODING
-# ------------------------------------------------------------
 # Converts human-readable confidence strings to integers
 # so scikit-learn's DecisionTreeClassifier can process them.
-# Lab Guide [B]: Preprocess data before model training.
-# ============================================================
+# Preprocess data before model training.
 
 def encode_confidence(level):
     """
@@ -151,20 +137,16 @@ def decode_recommendation(label):
              Returns original label unchanged if not recognized.
     """
     display = {
-        "Review Basics": "[REVIEW]  Review Basics",
-        "Practice More": "[PRACTICE] Practice More",
-        "Next Topic":    "[ADVANCE]  Next Topic"
+        "Review Basics": "Review Basics for stronger foundation",
+        "Practice More": "Practice More for better understanding",
+        "Next Topic":    "Next Topic: Keep up the great work!"
     }
     return display.get(label, label)
 
-
-# ============================================================
 # 4. INPUT VALIDATION
-# ------------------------------------------------------------
 # Validates all user inputs before passing them to the AI.
 # Called in app.py immediately after the submit button click.
 # Lab Guide [A]: Validate user input and show clear error messages.
-# ============================================================
 
 def validate_inputs(score, response_time, topic):
     """
@@ -207,18 +189,14 @@ def validate_inputs(score, response_time, topic):
     # All checks passed
     return True, ""
 
-
-# ============================================================
 # 5. COLOR MAPPING
-# ------------------------------------------------------------
 # Maps each recommendation label to a hex color code.
 # Used in app.py for the result banner border and metric cards.
 # Color coding gives instant visual signal to the student:
 #   Red    = needs attention (Review Basics)
 #   Orange = making progress (Practice More)
 #   Green  = ready to advance (Next Topic)
-# Lab Guide [C]: Visual UI -- colors/fonts consistent.
-# ============================================================
+# Preprocess data before model training.
 
 def get_recommendation_color(recommendation):
     """
