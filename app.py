@@ -1,23 +1,18 @@
-# ============================================================
 # app.py
-# ------------------------------------------------------------
-# AI Tutor for Personalized Learning Recommendations
-# Final Year BS CS -- AI Lab Project
-#
+# Main Streamlit app for the AI Tutor project.
 # This is the main Streamlit entry point.
 # All UI rendering happens here.
 # All AI logic is imported from recommendation_engine.py
 #
 # Lab Guide Modules Covered:
-#   [A] Problem Setup    -- Tab 1 input form + validation
-#   [B] Core Logic       -- Tab 1 result via engine/model
-#   [C] Visual UI        -- Tab 2 charts (bar/pie/line/radar)
-#   [D] Explainability   -- Tab 3 reasoning + factors
-#   [E] Evaluation       -- Tab 4 metrics + confusion matrix
+#   Problem Setup    -- Tab 1 input form + validation
+#   Core Logic       -- Tab 1 result via engine/model
+#   Visual UI        -- Tab 2 charts (bar/pie/line/radar)
+#   Explainability   -- Tab 3 reasoning + factors
+#   Evaluation       -- Tab 4 metrics + confusion matrix
 #
 # Run with:
 #   streamlit run app.py
-# ============================================================
 
 import streamlit as st
 import pandas as pd
@@ -42,26 +37,20 @@ from utils.helpers import (
     get_recommendation_color
 )
 
-# ------------------------------------------------------------
 # PAGE CONFIGURATION
 # Must be the very first Streamlit call in the script.
 # Sets the browser tab title, icon, and layout width.
-# ------------------------------------------------------------
 st.set_page_config(
-    page_title            = "AI Tutor -- Personalized Learning",
-    page_icon             = "[AI]",
+    page_title            = "AI Tutor PLR",
+    page_icon             = "",
     layout                = "wide",
     initial_sidebar_state = "expanded"
 )
 
-
-# ============================================================
 # HELPER FUNCTION: Metric Card
-# ------------------------------------------------------------
 # Renders a styled card with a colored left border.
 # Used to display recommendation outputs in a clean format.
-# Lab Guide [C]: Result panel requirement.
-# ============================================================
+# Result panel requirement.
 
 def metric_card(label, value, color="#1f77b4"):
     """
@@ -151,7 +140,7 @@ def comparison_chart(metrics):
     ))
 
     fig.update_layout(
-        title            = "[COMPARE] Rule-Based Engine vs Decision Tree -- Metric Comparison",
+        title            = "Rule-Based Engine vs Decision Tree -- Metric Comparison",
         barmode          = "group",
         yaxis_range      = [0, 1.15],
         yaxis_tickformat = ".0%",
@@ -200,7 +189,7 @@ def confusion_matrix_chart(cm, labels):
         y                      = labels,
         text_auto              = True,
         color_continuous_scale = "Blues",
-        title                  = "[MATRIX] Confusion Matrix -- Decision Tree"
+        title                  = "Confusion Matrix of Decision Tree Predictions"
     )
     fig.update_layout(
         xaxis_title   = "Predicted Label",
@@ -236,11 +225,11 @@ def render_ui():
         """
         <div style="padding: 20px 0 10px 0;">
             <h1 style="margin:0;">
-                [AI TUTOR] Personalized Learning Recommendations
+                Personalized Learning Recommendations
             </h1>
             <p style="color:#888; margin:6px 0 0 0; font-size:16px;">
-                Final Year BS CS -- AI Lab Project &nbsp;|&nbsp;
-                Rule-Based Engine + Decision Tree Classifier
+                Group:Abstract Minds &nbsp;|&nbsp;
+                Rule-Based Engine & Decision Tree Classifier
             </p>
         </div>
         """,
@@ -254,7 +243,7 @@ def render_ui():
     # Lab Guide [C]: Controls (buttons, dropdowns, toggles).
     # ----------------------------------------------------------
     with st.sidebar:
-        st.markdown("## [SETTINGS]")
+        st.markdown("Settings & Controls")
 
         # -- AI mode selector
         # Switches between Rule-Based Engine and Decision Tree.
@@ -269,13 +258,13 @@ def render_ui():
         )
 
         st.divider()
-        st.markdown("### [MODEL CONTROLS]")
+        st.markdown("Model Controls")
 
         # -- Retrain button
         # Allows user to retrain the Decision Tree on demand.
         # Model is saved to models/decision_tree.pkl after training.
         retrain_btn = st.button(
-            label               = "[>>] Retrain Decision Tree",
+            label               = "Retrain Decision Tree Model",
             use_container_width = True,
             help                = "Retrains the model on the dataset and saves it."
         )
@@ -287,27 +276,34 @@ def render_ui():
                     train_result = train_model(df_train)
                     if train_result["status"] == "success":
                         st.success(
-                            f"[OK] Model retrained successfully.\n"
+                            f"Model retrained successfully.\n"
                             f"Accuracy: {train_result['accuracy']:.2%}"
                         )
                     else:
-                        st.error(f"[ERROR] {train_result['message']}")
+                        st.error(f" {train_result['message']}")
                 else:
                     st.error(
-                        "[ERROR] Dataset not found. "
+                        "Dataset not found. "
                         "Run: python data/generate_dataset.py"
                     )
 
         st.divider()
-        st.markdown("### [ABOUT]")
+        st.markdown("### About This Project")
         st.markdown(
-            "**Project:** AI Tutor for Personalized Learning\n\n"
-            "**Team:**\n"
-            "- Muhammad Ibrahim *(Leader)*\n"
-            "- Arsal\n"
-            "- Ali\n\n"
-            "**Stack:** Python · Streamlit · scikit-learn · Plotly\n\n"
-            "**AI Methods:** Rule-Based Engine + Decision Tree"
+            "**Title:** AI Tutor for Personalized Learning Recommendations\n\n"
+            "**Subject:** Artificial Intelligence Lab(CSC631)\n\n"
+            "**Instructor:** Rajesh Kumar\n\n"
+            "**Institution:** IMCS, University of Sindh, Jamshoro\n\n"
+            "**Team — AbstractMinds**\n\n"
+            "- **Muhammad Ibrahim** `2k23/CSE/94` · Project Lead\n"
+            "  - Recommendation Engine · Decision Tree · Evaluation · Documentation . Dataset Generation\n\n"
+            "- **Arsal Jan** `2k23/CSE/34` · UI Developer\n"
+            "  - Streamlit UI · Tab Layout · Charts Integration · Testing\n\n"
+            "- **Ali** `2k23/CSE/27` · Utilities & Docs\n"
+            "  - Helper Utilities · Screenshots \n\n"
+            "---\n\n"
+            "**Stack:** Python · Streamlit · scikit-learn · Plotly · Pandas\n\n"
+            "**AI Methods:** Rule-Based Engine + Decision Tree Classifier"
         )
 
     # ----------------------------------------------------------
@@ -322,10 +318,10 @@ def render_ui():
     # Four tabs map directly to Lab Guide required modules.
     # ----------------------------------------------------------
     tab1, tab2, tab3, tab4 = st.tabs([
-        "[A+B] Get Recommendation",
-        "[C] Charts",
-        "[D] Explainability",
-        "[E] Evaluation"
+        "Get Recommendation",
+        "Charts",
+        "Explainability",
+        "Evaluation"
     ])
 
 
@@ -337,7 +333,7 @@ def render_ui():
 
     with tab1:
 
-        st.subheader("[INPUT] Enter Your Quiz Results")
+        st.subheader("Enter Your Quiz Details")
         st.caption(
             "Fill in your quiz details below and click "
             "**Get My Recommendation** to receive a personalized study plan."
@@ -425,7 +421,7 @@ def render_ui():
         # Lab Guide [C]: Controls -- buttons.
         # ------------------------------------------------------
         run_btn = st.button(
-            label               = "[>>] Get My Recommendation",
+            label               = "Get My Recommendation",
             type                = "primary",
             use_container_width = True
         )
@@ -440,7 +436,7 @@ def render_ui():
             is_valid, error_msg = validate_inputs(score, response_time, topic)
             if not is_valid:
                 # Show error and stop execution for this run
-                st.error(f"[ERROR] {error_msg}")
+                st.error(f"{error_msg}")
                 st.stop()
 
             # --------------------------------------------------
@@ -448,7 +444,7 @@ def render_ui():
             # Lab Guide [B]: Implement main algorithm/model.
             # Mode selected in sidebar determines which engine runs.
             # --------------------------------------------------
-            with st.spinner("[PROCESSING] Analysing your quiz performance..."):
+            with st.spinner("Generating recommendation..."):
 
                 # Build input dictionary passed to both engines
                 input_data = {
@@ -507,7 +503,7 @@ def render_ui():
                     margin-bottom: 16px;
                 ">
                     <h2 style="color:{color}; margin:0 0 8px 0;">
-                        [RESULT] {disp}
+                        Final Recommendation: {disp}
                     </h2>
                     <p style="margin:0; color:#666; font-size:15px;">
                         Topic: <strong>{topic}</strong>
@@ -533,7 +529,7 @@ def render_ui():
 
             with c2:
                 metric_card(
-                    "Next Topic",
+                    "Suggested Next Topic",
                     result.get("next_topic", topic),
                     "#1f77b4"
                 )
@@ -553,7 +549,7 @@ def render_ui():
                 )
                 metric_card(
                     "Revision Needed",
-                    "[!] Yes" if result.get("revision_needed") else "[OK] No",
+                    "Yes" if result.get("revision_needed") else " No",
                     revision_color
                 )
 
@@ -564,19 +560,19 @@ def render_ui():
             # Lab Guide [D]: Natural-language explanation.
             # --------------------------------------------------
             st.divider()
-            st.markdown("#### [WHY] Quick Explanation")
+            st.markdown("Why this recommendation?")
             explanation = generate_explanation(result, input_data)
             st.info(explanation)
 
             # Show which rule or model path fired
             rule_text = result.get("rule_triggered", "")
             if rule_text:
-                st.caption(f"[PATH] {rule_text}")
+                st.caption(f"{rule_text}")
 
             # Guide user to other tabs for full details
             st.success(
-                "[OK] Result saved. Switch to [C] Charts, "
-                "[D] Explainability, or [E] Evaluation tabs "
+                "Result saved! Switch to Charts, "
+                " Explainability, or Evaluation tabs "
                 "for full details."
             )
 
@@ -590,12 +586,12 @@ def render_ui():
 
     with tab2:
 
-        st.subheader("[CHARTS] Performance Visualizations")
+        st.subheader("Performance Visualizations")
 
         # Guard: dataset must exist before drawing charts
         if df is None:
             st.error(
-                "[ERROR] Dataset not found. "
+                "Dataset not found. "
                 "Run: python data/generate_dataset.py"
             )
             st.stop()
@@ -604,7 +600,7 @@ def render_ui():
         # DATASET OVERVIEW METRICS
         # Summary numbers shown above the charts as context.
         # ------------------------------------------------------
-        st.markdown("#### [DATA] Dataset Overview")
+        st.markdown("#### Dataset Overview")
         ov1, ov2, ov3, ov4 = st.columns(4)
         ov1.metric("Total Records",     len(df))
         ov2.metric("Topics Covered",    df["topic"].nunique())
@@ -622,7 +618,7 @@ def render_ui():
         charts = create_visuals(df, result_for_charts)
 
         if not charts:
-            st.warning("[WARN] Charts could not be generated.")
+            st.warning(" Charts could not be generated.")
             st.stop()
 
         # ------------------------------------------------------
@@ -672,8 +668,8 @@ def render_ui():
             )
         else:
             st.info(
-                "[INFO] Run a recommendation in the "
-                "[A+B] Get Recommendation tab to see "
+                "Run a recommendation in the "
+                "Get Recommendation tab to see "
                 "your personal radar chart."
             )
 
@@ -684,7 +680,7 @@ def render_ui():
         # Shows first 20 rows of the dataset.
         # Lab Guide [C]: Tables with highlights.
         # ------------------------------------------------------
-        st.markdown("#### [TABLE] Dataset Sample")
+        st.markdown("#### Dataset Sample")
         st.caption("Showing first 20 rows of student_scores.csv")
         st.dataframe(
             df.head(20).copy(),
@@ -702,7 +698,7 @@ def render_ui():
 
     with tab3:
 
-        st.subheader("[EXPLAIN] Explainability Module")
+        st.subheader("How The Explainability Module Works")
         st.caption(
             "This section shows exactly how and why "
             "the AI produced its recommendation."
@@ -711,9 +707,9 @@ def render_ui():
         # Guard: user must run a recommendation in Tab 1 first
         if "last_result" not in st.session_state:
             st.info(
-                "[INFO] Go to the [A+B] Get Recommendation tab, "
+                "Go to the Get Recommendation tab, "
                 "enter your quiz results and click "
-                "[>>] Get My Recommendation first."
+                "Get My Recommendation first."
             )
             st.stop()
 
@@ -730,7 +726,7 @@ def render_ui():
         # Repeats the recommendation so user sees it in context
         # of the explanation below.
         # ------------------------------------------------------
-        st.markdown("#### [RESULT] Final Recommendation")
+        st.markdown("####  Final Recommendation")
         st.markdown(
             f"""
             <div style="
@@ -757,7 +753,7 @@ def render_ui():
         # Shows each input value with a signal (High/Low/OK).
         # Lab Guide [D]: Display key factors/features/rules.
         # ------------------------------------------------------
-        st.markdown("#### [FACTORS] Key Factors in This Decision")
+        st.markdown("####  Key Factors in This Decision")
 
         # Extract input values from stored context
         score         = context.get("score_pct",     0)
@@ -770,15 +766,15 @@ def render_ui():
 
         # Score signal -- compared against thresholds
         score_signal = (
-            "[LOW]"    if score < 40  else
-            "[MID]"    if score < 70  else
-            "[HIGH]"
+            "LOW"    if score < 40  else
+            "MID"    if score < 70  else
+            "HIGH"
         )
         kf1.metric("Quiz Score",    f"{score}%",       score_signal)
 
         # Response time signal -- above 80s is slow
         time_signal = (
-            "[SLOW]" if response_time > 80 else "[FAST]"
+            "SLOW" if response_time > 80 else "[FAST]"
         )
         kf2.metric("Response Time", f"{response_time}s", time_signal)
 
@@ -794,7 +790,7 @@ def render_ui():
         if prev_score is not None:
             change       = score - prev_score
             trend_label  = f"{'(+)' if change >= 0 else '(-)'} {abs(change):.1f}%"
-            trend_signal = "[IMPROVING]" if change >= 0 else "[DECLINING]"
+            trend_signal = "IMPROVING" if change >= 0 else "[DECLINING]"
             kf4.metric("Score Trend", trend_label, trend_signal)
         else:
             trend_signal = "N/A"
@@ -807,7 +803,7 @@ def render_ui():
         # Plain-English paragraph generated by generate_explanation().
         # Lab Guide [D]: Add short natural-language explanation.
         # ------------------------------------------------------
-        st.markdown("#### [TEXT] Full Explanation")
+        st.markdown("#### Detailed Explanation")
         explanation = generate_explanation(result, context)
         st.info(explanation)
 
@@ -820,7 +816,7 @@ def render_ui():
         # Lab Guide [D]: Show why app produced that output.
         # Lab Guide [B]: Show intermediate steps.
         # ------------------------------------------------------
-        st.markdown("#### [PATH] AI Decision Path")
+        st.markdown("####  AI Decision Path")
 
         if mode == "Rule-Based Engine":
 
@@ -836,7 +832,7 @@ def render_ui():
                 for mod in modifiers:
                     st.code(mod, language=None)
             else:
-                st.success("[OK] No modifier rules were triggered.")
+                st.success(" No modifier rules were triggered.")
 
             # Full step-by-step reasoning log (expandable)
             st.markdown("**Step-by-Step Reasoning Log:**")
@@ -878,7 +874,7 @@ def render_ui():
         # Lab Guide [C]: Tables with highlights.
         # Lab Guide [D]: Display key factors/rules used.
         # ------------------------------------------------------
-        st.markdown("#### [TABLE] Input vs Threshold Summary")
+        st.markdown("####  Input vs Threshold Summary")
 
         thresholds_data = {
             "Feature": [
@@ -924,7 +920,7 @@ def render_ui():
 
     with tab4:
 
-        st.subheader("[EVAL] Evaluation Module")
+        st.subheader("Evaluation Module")
         st.caption(
             "Compares Rule-Based Engine vs Decision Tree across "
             "Accuracy, Precision, Recall, F1-Score, and Confusion Matrix."
@@ -932,7 +928,7 @@ def render_ui():
 
         # Guard: dataset must exist
         if df is None:
-            st.error("[ERROR] Dataset not found.")
+            st.error(" Dataset not found.")
             st.stop()
 
         # ------------------------------------------------------
@@ -942,14 +938,14 @@ def render_ui():
         # Lab Guide [E]: Compare at least two approaches.
         # ------------------------------------------------------
         with st.spinner(
-            "[PROCESSING] Running evaluation on test split..."
+            "PROCESSING the evaluation on test split..."
         ):
             metrics = evaluate_model(df)
 
         # Guard: evaluation must succeed
         if not metrics or metrics["test_size"] == 0:
             st.error(
-                "[ERROR] Evaluation failed. "
+                "Evaluation failed. "
                 "Check dataset and model."
             )
             st.stop()
@@ -958,7 +954,7 @@ def render_ui():
         # DATASET SPLIT INFO
         # Shows how many records were used for training vs testing.
         # ------------------------------------------------------
-        st.markdown("#### [DATA] Dataset Split (80% Train / 20% Test)")
+        st.markdown("#### Dataset Split (80% Train / 20% Test)")
         ds1, ds2, ds3 = st.columns(3)
         ds1.metric("Total Records", len(df))
         ds2.metric("Training Set",  metrics["train_size"])
@@ -971,7 +967,7 @@ def render_ui():
         # Rule-Based (orange) vs Decision Tree (blue).
         # Lab Guide [E]: Show 2-3 performance indicators.
         # ------------------------------------------------------
-        st.markdown("#### [METRICS] Performance Metrics")
+        st.markdown("#### Performance Metrics")
 
         col_rules, col_tree = st.columns(2)
 
@@ -1007,7 +1003,7 @@ def render_ui():
         # Lab Guide [E]: Compare at least two approaches.
         # Lab Guide [C]: Charts (bar).
         # ------------------------------------------------------
-        st.markdown("#### [COMPARE] Side-by-Side Approach Comparison")
+        st.markdown("####  Side-by-Side Approach Comparison")
         comp_fig = comparison_chart(metrics)
         st.plotly_chart(comp_fig, use_container_width=True)
 
@@ -1015,18 +1011,18 @@ def render_ui():
         if metrics["tree_accuracy"] > metrics["rules_accuracy"]:
             diff = metrics["tree_accuracy"] - metrics["rules_accuracy"]
             st.success(
-                f"[RESULT] Decision Tree outperforms the Rule-Based Engine "
+                f" Decision Tree outperforms the Rule-Based Engine "
                 f"by {diff:.2%} in accuracy on this test set."
             )
         elif metrics["rules_accuracy"] > metrics["tree_accuracy"]:
             diff = metrics["rules_accuracy"] - metrics["tree_accuracy"]
             st.info(
-                f"[RESULT] Rule-Based Engine outperforms the Decision Tree "
+                f" Rule-Based Engine outperforms the Decision Tree "
                 f"by {diff:.2%} in accuracy on this test set."
             )
         else:
             st.info(
-                "[RESULT] Both approaches achieved equal accuracy "
+                "Both approaches achieved equal accuracy "
                 "on this test set."
             )
 
@@ -1038,7 +1034,7 @@ def render_ui():
         # predictions for each class.
         # Lab Guide [E]: Performance indicators.
         # ------------------------------------------------------
-        st.markdown("#### [MATRIX] Confusion Matrix (Decision Tree)")
+        st.markdown("#### Confusion Matrix (Decision Tree)")
         st.caption(
             "Rows = Actual labels. "
             "Columns = Predicted labels. "
@@ -1052,7 +1048,7 @@ def render_ui():
             )
             st.plotly_chart(cm_fig, use_container_width=True)
         else:
-            st.warning("[WARN] Confusion matrix not available.")
+            st.warning(" Confusion matrix not available.")
 
         st.divider()
 
@@ -1062,7 +1058,7 @@ def render_ui():
         # Placed in expander to keep the page clean.
         # ------------------------------------------------------
         st.markdown(
-            "#### [REPORT] Full Classification Report (Decision Tree)"
+            "#### Full Classification Report (Decision Tree)"
         )
         st.caption(
             "Per-class Precision, Recall, F1-Score, and Support."
@@ -1078,7 +1074,7 @@ def render_ui():
         # Helps evaluators and viva panel understand the output.
         # Lab Guide [D]: Natural-language explanation.
         # ------------------------------------------------------
-        st.markdown("#### [GUIDE] How to Interpret These Results")
+        st.markdown("#### How to Interpret These Results")
 
         st.markdown("""
         | Term | Meaning |
